@@ -11,10 +11,11 @@ public class LocationInfo {
     public String province;
     public String city;
     public String aoiname;
+    public String poiname;
     public String details;
 
     @Override
     public String toString() {
-        return country + province + city + aoiname;
+        return details;
     }
 }

@@ -18,7 +18,7 @@ public abstract class LocationBase {
     /**
      * 最大定位错误次数
      */
-    public static int MAX_ERROR_NUM = 5;
+    private int maxErrorNum = 5;
     private int currentNum = 0;
 
     public LocationBase(Context context) {
@@ -43,6 +43,11 @@ public abstract class LocationBase {
         return this;
     }
 
+    public LocationBase setMaxErrorNum(int maxErrorNum) {
+        this.maxErrorNum = maxErrorNum;
+        return this;
+    }
+
     /**
      * 定位失败
      *
@@ -50,7 +55,7 @@ public abstract class LocationBase {
      */
     protected void locationFail(String msg) {
         currentNum++;
-        if (currentNum > MAX_ERROR_NUM) {
+        if (currentNum > maxErrorNum) {
             stop();
             if (callbackFail != null) {
                 callbackFail.done(msg);

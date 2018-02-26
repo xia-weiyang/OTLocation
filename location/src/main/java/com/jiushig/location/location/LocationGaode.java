@@ -9,6 +9,7 @@ import com.jiushig.location.utils.Log;
 
 /**
  * Created by zk on 2018/2/25.
+ * 高的定位
  */
 
 public class LocationGaode extends LocationBase {
@@ -24,7 +25,7 @@ public class LocationGaode extends LocationBase {
             if (null != aMapLocation) {
                 //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
                 if (aMapLocation.getErrorCode() == 0) {
-                    Log.w(TAG, "高德定位：" + aMapLocation.toStr());
+                    Log.i(TAG, "高德定位：" + aMapLocation.toStr());
 
                     LocationInfo info = new LocationInfo();
                     info.latitude = aMapLocation.getLatitude();
@@ -41,7 +42,7 @@ public class LocationGaode extends LocationBase {
                     Log.w(TAG, "高德定位：" + aMapLocation.getErrorCode());
                     Log.w(TAG, "高德定位：" + aMapLocation.getErrorInfo());
                     Log.w(TAG, "高德定位：" + aMapLocation.getLocationDetail());
-                    locationFail(aMapLocation.getErrorInfo());
+                    locationFail("定位失败：" + aMapLocation.getErrorCode());
                 }
 
             } else {
