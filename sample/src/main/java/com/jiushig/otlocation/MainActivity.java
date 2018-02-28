@@ -1,10 +1,12 @@
 package com.jiushig.otlocation;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.jiushig.location.location.LocationBuilder;
+import com.jiushig.location.map.MapActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,5 +23,9 @@ public class MainActivity extends AppCompatActivity {
                         .setCallbackFail(msg -> Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show())
                         .start()
         );
+
+        findViewById(R.id.button1).setOnClickListener(view -> {
+            MapActivity.start(this,30.63,106.07);
+        });
     }
 }

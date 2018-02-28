@@ -12,10 +12,16 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/button"
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="定位"/>
+
+        <Button
+            android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="定位"/>
+            android:text="打开地图"/>
 
     </LinearLayout>
 
