@@ -1,10 +1,18 @@
 package com.jiushig.location.location;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.poisearch.PoiResult;
+import com.amap.api.services.poisearch.PoiSearch;
+import com.jiushig.location.entity.Location;
+import com.jiushig.location.ui.SelectActivity;
 import com.jiushig.location.utils.Log;
 
 /**
@@ -27,14 +35,43 @@ public class LocationGaode extends LocationBase {
                 if (aMapLocation.getErrorCode() == 0) {
                     Log.i(TAG, "高德定位：" + aMapLocation.toStr());
 
-                    LocationInfo info = new LocationInfo();
-                    info.latitude = aMapLocation.getLatitude();
-                    info.longitude = aMapLocation.getLongitude();
-                    info.country = aMapLocation.getCountry();
-                    info.province = aMapLocation.getProvince();
-                    info.city = aMapLocation.getCity();
-                    info.details = aMapLocation.getAddress();
-                    locationSuccess(info);
+                    // PIO检索
+                    PoiSearch.Query query = new PoiSearch.Query(LocationBuilder.POI, "", aMapLocation.getCityCode());
+                    query.setPageSize(1);
+                    query.setPageNum(0);
+                    PoiSearch poiSearch = new PoiSearch(context, query);
+                    poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(aMapLocation.getLatitude(),
+                            aMapLocation.getLongitude()), 1000));
+                    poiSearch.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
+                        @Override
+                        public void onPoiSearched(PoiResult poiResult, int i) {
+                            //解析result获取POI信息
+                            if (i == 1000) {
+                                Location info = new Location();
+                                for (PoiItem poiItem : poiResult.getPois()) {
+                                    Log.i(TAG, poiItem.toString());
+                                    info.country = aMapLocation.getCountry();
+                                    info.poiName = poiItem.getTitle();
+                                    info.details = poiItem.getSnippet();
+                                    info.latitude = poiItem.getLatLonPoint().getLatitude();
+                                    info.longitude = poiItem.getLatLonPoint().getLongitude();
+                                    info.province = poiItem.getProvinceName();
+                                    info.city = poiItem.getCityName();
+                                }
+
+                                locationSuccess(info);
+                            } else {
+                                Log.e(TAG, "POI 检索失败 " + i);
+                                locationFail("POI 检索失败 " + i);
+                            }
+                        }
+
+                        @Override
+                        public void onPoiItemSearched(PoiItem poiItem, int i) {
+
+                        }
+                    });
+                    poiSearch.searchPOIAsyn();
 
                 } else {
                     //定位失败

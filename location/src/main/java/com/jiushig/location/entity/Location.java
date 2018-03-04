@@ -1,10 +1,12 @@
-package com.jiushig.location.location;
+package com.jiushig.location.entity;
+
+import java.io.Serializable;
 
 /**
  * Created by zk on 2018/2/25.
  */
 
-public class LocationInfo {
+public class Location implements Serializable {
     public double longitude;
     public double latitude;
     public String country;
@@ -15,6 +17,6 @@ public class LocationInfo {
 
     @Override
     public String toString() {
-        return details;
+        return poiName;
     }
 }

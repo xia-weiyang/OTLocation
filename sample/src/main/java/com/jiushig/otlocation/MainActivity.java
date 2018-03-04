@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.jiushig.location.entity.Location;
 import com.jiushig.location.location.LocationBuilder;
 import com.jiushig.location.ui.MapActivity;
 import com.jiushig.location.ui.SelectActivity;
@@ -30,7 +31,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.button2).setOnClickListener(view -> {
-            startActivity(new Intent(this, SelectActivity.class));
+            SelectActivity.start(this);
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SelectActivity.REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Location location = (Location) data.getSerializableExtra("info");
+                if (location != null)
+                    Toast.makeText(MainActivity.this, location.toString(), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

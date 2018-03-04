@@ -2,6 +2,7 @@ package com.jiushig.location.location;
 
 import android.content.Context;
 
+import com.jiushig.location.entity.Location;
 import com.jiushig.location.utils.Helper;
 
 /**
@@ -10,7 +11,7 @@ import com.jiushig.location.utils.Helper;
 
 public abstract class LocationBase {
 
-    private Context context;
+    protected Context context;
 
     private CallbackFail callbackFail;
     private CallbackSuccess callbackSuccess;
@@ -26,7 +27,7 @@ public abstract class LocationBase {
     }
 
     public interface CallbackSuccess {
-        void done(LocationInfo locationInfo);
+        void done(Location location);
     }
 
     public interface CallbackFail {
@@ -66,21 +67,21 @@ public abstract class LocationBase {
     /**
      * 定位成功
      *
-     * @param locationInfo
+     * @param location
      */
-    protected void locationSuccess(LocationInfo locationInfo) {
-        if (locationInfo == null
-                || locationInfo.longitude == 0
-                || locationInfo.latitude == 0
-                || (Helper.isEmptyString(locationInfo.details)
-                && Helper.isEmptyString(locationInfo.city)
-                && Helper.isEmptyString(locationInfo.country))) {
+    protected void locationSuccess(Location location) {
+        if (location == null
+                || location.longitude == 0
+                || location.latitude == 0
+                || (Helper.isEmptyString(location.details)
+                && Helper.isEmptyString(location.city)
+                && Helper.isEmptyString(location.country))) {
             locationFail("定位失败");
             return;
         }
         stop();
         if (callbackSuccess != null) {
-            callbackSuccess.done(locationInfo);
+            callbackSuccess.done(location);
         }
     }
 

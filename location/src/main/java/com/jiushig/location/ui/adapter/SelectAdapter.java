@@ -1,16 +1,18 @@
 package com.jiushig.location.ui.adapter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jiushig.location.R;
-import com.jiushig.location.location.LocationInfo;
+import com.jiushig.location.entity.Location;
 import com.jiushig.location.ui.SelectActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +21,11 @@ import java.util.List;
 
 public class SelectAdapter extends RecyclerView.Adapter<SelectAdapter.SelectViewHolder> {
 
-    private List<LocationInfo> locationInfos;
+    private ArrayList<Location> locations;
     private SelectActivity selectActivity;
 
-    public SelectAdapter(SelectActivity activity, List<LocationInfo> locationInfos) {
-        this.locationInfos = locationInfos;
+    public SelectAdapter(SelectActivity activity, ArrayList<Location> locations) {
+        this.locations = locations;
         this.selectActivity = activity;
 
     }
@@ -35,12 +37,12 @@ public class SelectAdapter extends RecyclerView.Adapter<SelectAdapter.SelectView
 
     @Override
     public void onBindViewHolder(SelectViewHolder holder, int position) {
-        holder.textView.setText(locationInfos.get(position).poiName);
+        holder.textView.setText(locations.get(position).poiName);
     }
 
     @Override
     public int getItemCount() {
-        return locationInfos.size();
+        return locations.size();
     }
 
     class SelectViewHolder extends RecyclerView.ViewHolder {
@@ -50,6 +52,13 @@ public class SelectAdapter extends RecyclerView.Adapter<SelectAdapter.SelectView
         public SelectViewHolder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.text);
+
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent();
+                intent.putExtra("info", locations.get(getAdapterPosition()));
+                selectActivity.setResult(Activity.RESULT_OK, intent);
+                selectActivity.finish();
+            });
         }
     }
 }

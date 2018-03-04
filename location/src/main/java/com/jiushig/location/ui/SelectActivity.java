@@ -1,13 +1,17 @@
 package com.jiushig.location.ui;
 
-import android.location.Location;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
@@ -23,7 +27,8 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.jiushig.location.R;
-import com.jiushig.location.location.LocationInfo;
+import com.jiushig.location.entity.Location;
+import com.jiushig.location.location.LocationBuilder;
 import com.jiushig.location.ui.adapter.SelectAdapter;
 import com.jiushig.location.utils.Log;
 
@@ -43,9 +48,9 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
 
-    private List<LocationInfo> locationInfos = new ArrayList<>();
+    private ArrayList<Location> locations = new ArrayList<>();
 
-    public static String POI = "餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|金融保险服务|公司企业|道路附属设施|地名地址信息|公共设施";
+    public static final int REQUEST_CODE = 234;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +67,12 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(new SelectAdapter(this, locationInfos));
+        recyclerView.setAdapter(new SelectAdapter(this, locations));
+    }
+
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity, SelectActivity.class);
+        activity.startActivityForResult(intent, REQUEST_CODE);
     }
 
     /**
@@ -84,8 +94,8 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory
                 .fromResource(R.drawable.gps_point));// 设置小蓝点的图标
-//        myLocationStyle.strokeColor(Color.BLACK);// 设置圆形的边框颜色
-//        myLocationStyle.radiusFillColor(Color.argb(50, 255, 255, 80));// 设置圆形的填充颜色
+        myLocationStyle.strokeColor(Color.argb(50, 135, 206, 150));// 设置圆形的边框颜色
+        myLocationStyle.radiusFillColor(Color.argb(50, 135, 206, 150));// 设置圆形的填充颜色
 //         myLocationStyle.anchor(int,int)//设置小蓝点的锚点
         //myLocationStyle.strokeWidth(1.0f);// 设置圆形的边框粗细
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
@@ -132,7 +142,7 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
 
 
     @Override
-    public void onMyLocationChange(Location location) {
+    public void onMyLocationChange(android.location.Location location) {
         Log.i(TAG, location.toString());
 
         // 查询地址详细信息
@@ -149,7 +159,7 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
         //解析result获取地址描述信息
         if (i == 1000) {
             // PIO检索
-            PoiSearch.Query query = new PoiSearch.Query(POI, "", regeocodeResult.getRegeocodeAddress().getCityCode());
+            PoiSearch.Query query = new PoiSearch.Query(LocationBuilder.POI, "", regeocodeResult.getRegeocodeAddress().getCityCode());
             query.setPageSize(30);
             query.setPageNum(0);
             PoiSearch poiSearch = new PoiSearch(this, query);
@@ -158,25 +168,29 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
             poiSearch.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
                 @Override
                 public void onPoiSearched(PoiResult poiResult, int i) {
-                    //解析result获取POI信息
-                    progressBar.setVisibility(View.GONE);
-                    locationInfos.clear();
-                    for (PoiItem poiItem : poiResult.getPois()) {
-                        Log.i(TAG, poiItem.toString());
-                        LocationInfo info = new LocationInfo();
-                        info.country = regeocodeResult.getRegeocodeAddress().getCountry();
-                        info.poiName = poiItem.getTitle();
-                        info.details = poiItem.getSnippet();
-                        info.latitude = poiItem.getLatLonPoint().getLatitude();
-                        info.longitude = poiItem.getLatLonPoint().getLongitude();
-                        info.province = poiItem.getProvinceName();
-                        info.city = poiItem.getCityName();
+                    if (i == 1000) {
+                        //解析result获取POI信息
+                        progressBar.setVisibility(View.GONE);
+                        locations.clear();
+                        for (PoiItem poiItem : poiResult.getPois()) {
+                            Log.i(TAG, poiItem.toString());
+                            Location info = new Location();
+                            info.country = regeocodeResult.getRegeocodeAddress().getCountry();
+                            info.poiName = poiItem.getTitle();
+                            info.details = poiItem.getSnippet();
+                            info.latitude = poiItem.getLatLonPoint().getLatitude();
+                            info.longitude = poiItem.getLatLonPoint().getLongitude();
+                            info.province = poiItem.getProvinceName();
+                            info.city = poiItem.getCityName();
 
-                        locationInfos.add(info);
+                            locations.add(info);
+                        }
+
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(SelectActivity.this, "检索失败 " + i, Toast.LENGTH_LONG).show();
                     }
-
-                    progressBar.setVisibility(View.GONE);
-                    recyclerView.getAdapter().notifyDataSetChanged();
                 }
 
                 @Override
@@ -193,5 +207,14 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
