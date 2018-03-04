@@ -1,4 +1,4 @@
-package com.jiushig.location.map;
+package com.jiushig.location.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +50,9 @@ public class MapActivity extends AppCompatActivity {
 
         aMap = mapView.getMap();
         getAddress();
+
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initView() {

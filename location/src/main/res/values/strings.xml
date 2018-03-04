@@ -2,4 +2,5 @@
     <string name="app_name">location</string>
 
     <string name="activity_map">位置信息</string>
+    <string name="activity_select">位置选择</string>
 </resources>

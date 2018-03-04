@@ -33,7 +33,6 @@ public class LocationGaode extends LocationBase {
                     info.country = aMapLocation.getCountry();
                     info.province = aMapLocation.getProvince();
                     info.city = aMapLocation.getCity();
-                    info.aoiname = aMapLocation.getAoiName();
                     info.details = aMapLocation.getAddress();
                     locationSuccess(info);
 

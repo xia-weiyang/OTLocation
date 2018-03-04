@@ -10,8 +10,7 @@ public class LocationInfo {
     public String country;
     public String province;
     public String city;
-    public String aoiname;
-    public String poiname;
+    public String poiName;
     public String details;
 
     @Override

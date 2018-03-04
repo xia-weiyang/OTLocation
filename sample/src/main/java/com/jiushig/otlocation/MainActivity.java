@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.jiushig.location.location.LocationBuilder;
-import com.jiushig.location.map.MapActivity;
+import com.jiushig.location.ui.MapActivity;
+import com.jiushig.location.ui.SelectActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,7 +26,11 @@ public class MainActivity extends AppCompatActivity {
         );
 
         findViewById(R.id.button1).setOnClickListener(view -> {
-            MapActivity.start(this,30.63,106.07);
+            MapActivity.start(this, 30.63, 106.07);
+        });
+
+        findViewById(R.id.button2).setOnClickListener(view -> {
+            startActivity(new Intent(this, SelectActivity.class));
         });
     }
 }
