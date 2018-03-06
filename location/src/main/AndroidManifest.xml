@@ -23,9 +23,11 @@
             <!--android:value="b11d048cac0213684c68bc489e40fbe1" />-->
 
         <activity android:name=".ui.MapActivity"
+            android:theme="@style/AppThemeLocation"
             android:label="@string/activity_map"/>
 
         <activity android:name=".ui.SelectActivity"
+            android:theme="@style/AppThemeLocation"
             android:label="@string/activity_select"/>
 
     </application>

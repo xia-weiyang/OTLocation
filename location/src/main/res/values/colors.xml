@@ -2,4 +2,8 @@
 <resources>
     <color name="colorWhite">#fff</color>
     <color name="colorWhitePress">#f5f5f5</color>
+
+    <color name="colorAccent">#666</color>
+    <color name="colorPrimary">#191919</color>
+    <color name="colorPrimaryDark">#000</color>
 </resources>
