@@ -14,6 +14,7 @@ public class Location implements Serializable {
     public String city;
     public String poiName;
     public String details;
+    public boolean isSelect = true;  // 是否选择了位置信息
 
     @Override
     public String toString() {

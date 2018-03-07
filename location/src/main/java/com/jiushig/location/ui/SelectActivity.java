@@ -52,6 +52,11 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
 
     public static final int REQUEST_CODE = 234;
 
+    /**
+     * 当不为空时 显示不选择位置item
+     */
+    private String unSelect;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +64,8 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        unSelect = getIntent().getStringExtra("unSelect");
 
         mapView = findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
@@ -70,9 +77,14 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
         recyclerView.setAdapter(new SelectAdapter(this, locations));
     }
 
-    public static void start(Activity activity) {
+    public static void start(Activity activity, String unSelect) {
         Intent intent = new Intent(activity, SelectActivity.class);
+        intent.putExtra("unSelect", unSelect);
         activity.startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    public static void start(Activity activity) {
+        start(activity, "");
     }
 
     /**
@@ -172,6 +184,14 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
                         //解析result获取POI信息
                         progressBar.setVisibility(View.GONE);
                         locations.clear();
+
+                        if (!"".equals(unSelect)) {
+                            Location info = new Location();
+                            info.poiName = unSelect;
+                            info.isSelect = false;
+                            locations.add(info);
+                        }
+
                         for (PoiItem poiItem : poiResult.getPois()) {
                             Log.i(TAG, poiItem.toString());
                             Location info = new Location();

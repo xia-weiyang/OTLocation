@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.button2).setOnClickListener(view -> {
-            SelectActivity.start(this);
+            SelectActivity.start(this,"不选择位置");
         });
     }
 
