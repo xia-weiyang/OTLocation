@@ -140,7 +140,7 @@ public class MapActivity extends AppCompatActivity {
 
         //改变可视区域为指定位置
         //CameraPosition4个参数分别为位置，缩放级别，目标可视区域倾斜度，可视区域指向方向（正北逆时针算起，0-360）
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18, 0, 30));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 17, 0, 30));
         aMap.moveCamera(cameraUpdate);//地图移向指定区域
     }
 

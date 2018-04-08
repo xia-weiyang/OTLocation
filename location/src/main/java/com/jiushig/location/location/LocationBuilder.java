@@ -8,7 +8,7 @@ import android.content.Context;
 
 public class LocationBuilder {
 
-    public static String POI = "餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|金融保险服务|公司企业|道路附属设施|地名地址信息|公共设施";
+    public static String POI = "风景名胜|地名地址信息|公司企业|科教文化服务|餐饮服务|购物服务|住宿服务|生活服务|体育休闲服务|医疗保健服务|商务住宅|政府机构及社会团体|交通设施服务|金融保险服务|道路附属设施|公共设施";
 
     private Context context;
 

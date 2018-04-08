@@ -10,6 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -17,6 +20,10 @@ import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
+import com.amap.api.maps2d.model.CameraPosition;
+import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps2d.model.Marker;
+import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
@@ -47,6 +54,8 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
     private MapView mapView;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
+
+    private Marker marker;
 
     private ArrayList<Location> locations = new ArrayList<>();
 
@@ -117,9 +126,33 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
         aMap.setOnMyLocationChangeListener(this);
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
 //        aMap.getUiSettings().setZoomControlsEnabled(false);//取消右下角缩放按钮
-//        aMap.getUiSettings().setScaleControlsEnabled(true);//显示控制比例尺控件
+        aMap.getUiSettings().setScaleControlsEnabled(true);//显示控制比例尺控件
         //设置希望展示的地图缩放级别   地图的缩放级别一共分为 17 级，从 3 到 19。数字越大，展示的图面信息越精细。
         aMap.moveCamera(CameraUpdateFactory.zoomTo(18.0f));
+
+        aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+
+            }
+
+            @Override
+            public void onCameraChangeFinish(CameraPosition cameraPosition) {
+                Log.i(TAG, cameraPosition.toString());
+
+                // 绘制标记点
+                if (marker != null) {
+                    marker.destroy();
+                }
+                marker = aMap.addMarker(new MarkerOptions().position(cameraPosition.target));
+
+                // 查询地址详细信息
+                GeocodeSearch geocoderSearch = new GeocodeSearch(SelectActivity.this);
+                geocoderSearch.setOnGeocodeSearchListener(SelectActivity.this);
+                RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(cameraPosition.target.latitude, cameraPosition.target.longitude), 200, GeocodeSearch.AMAP);
+                geocoderSearch.getFromLocationAsyn(query);
+            }
+        });
     }
 
 
@@ -157,11 +190,11 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
     public void onMyLocationChange(android.location.Location location) {
         Log.i(TAG, location.toString());
 
-        // 查询地址详细信息
-        GeocodeSearch geocoderSearch = new GeocodeSearch(this);
-        geocoderSearch.setOnGeocodeSearchListener(this);
-        RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(location.getLatitude(), location.getLongitude()), 200, GeocodeSearch.AMAP);
-        geocoderSearch.getFromLocationAsyn(query);
+//        // 查询地址详细信息
+//        GeocodeSearch geocoderSearch = new GeocodeSearch(this);
+//        geocoderSearch.setOnGeocodeSearchListener(this);
+//        RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(location.getLatitude(), location.getLongitude()), 200, GeocodeSearch.AMAP);
+//        geocoderSearch.getFromLocationAsyn(query);
 
     }
 
@@ -172,7 +205,7 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
         if (i == 1000) {
             // PIO检索
             PoiSearch.Query query = new PoiSearch.Query(LocationBuilder.POI, "", regeocodeResult.getRegeocodeAddress().getCityCode());
-            query.setPageSize(30);
+            query.setPageSize(50);
             query.setPageNum(0);
             PoiSearch poiSearch = new PoiSearch(this, query);
             poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(regeocodeResult.getRegeocodeQuery().getPoint().getLatitude(),
