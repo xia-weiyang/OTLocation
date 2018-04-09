@@ -133,7 +133,10 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
+                Log.d(TAG, cameraPosition.toString());
 
+                // 绘制标记点
+                showMarker(new MarkerOptions().position(cameraPosition.target));
             }
 
             @Override
@@ -141,12 +144,11 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
                 Log.i(TAG, cameraPosition.toString());
 
                 // 绘制标记点
-                if (marker != null) {
-                    marker.destroy();
-                }
-                marker = aMap.addMarker(new MarkerOptions().position(cameraPosition.target));
+                showMarker(new MarkerOptions().position(cameraPosition.target));
 
                 // 查询地址详细信息
+                progressBar.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.INVISIBLE);
                 GeocodeSearch geocoderSearch = new GeocodeSearch(SelectActivity.this);
                 geocoderSearch.setOnGeocodeSearchListener(SelectActivity.this);
                 RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(cameraPosition.target.latitude, cameraPosition.target.longitude), 200, GeocodeSearch.AMAP);
@@ -155,6 +157,18 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
         });
     }
 
+    /**
+     * 展示高德地图标记点
+     *
+     * @param markerOptions
+     */
+    private void showMarker(MarkerOptions markerOptions) {
+        if (marker == null) {
+            marker = aMap.addMarker(markerOptions);
+        } else {
+            marker.setPosition(markerOptions.getPosition());
+        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -216,6 +230,7 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
                     if (i == 1000) {
                         //解析result获取POI信息
                         progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                         locations.clear();
 
                         if (!"".equals(unSelect)) {
