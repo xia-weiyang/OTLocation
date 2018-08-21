@@ -38,6 +38,7 @@ import com.jiushig.location.entity.Location;
 import com.jiushig.location.location.LocationBuilder;
 import com.jiushig.location.ui.adapter.SelectAdapter;
 import com.jiushig.location.utils.Log;
+import com.jiushig.location.utils.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ import java.util.List;
  * Created by zk on 2018/3/4.
  */
 
-public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocationChangeListener, GeocodeSearch.OnGeocodeSearchListener {
+public class SelectActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, GeocodeSearch.OnGeocodeSearchListener {
 
     private static final String TAG = SelectActivity.class.getSimpleName();
 
@@ -78,7 +79,10 @@ public class SelectActivity extends AppCompatActivity implements AMap.OnMyLocati
 
         mapView = findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
-        initMap();
+        Permission.location(this,isSuccess -> {
+            initMap();
+        });
+
 
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);

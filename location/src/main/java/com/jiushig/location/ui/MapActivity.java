@@ -28,7 +28,7 @@ import com.jiushig.location.utils.Log;
  * Created by zk on 2018/2/26.
  */
 
-public class MapActivity extends AppCompatActivity {
+public class MapActivity extends BaseActivity {
 
     private static final String TAG = MapActivity.class.getSimpleName();
 

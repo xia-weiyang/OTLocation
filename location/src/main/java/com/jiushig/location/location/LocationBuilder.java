@@ -1,6 +1,9 @@
 package com.jiushig.location.location;
 
+import android.app.Activity;
 import android.content.Context;
+
+import com.jiushig.location.utils.Permission;
 
 /**
  * Created by zk on 2018/2/26.
@@ -50,6 +53,10 @@ public class LocationBuilder {
      * 开始执行
      */
     public void start() {
+        if (context instanceof Activity) {
+            if (!Permission.location((Activity) context)) return;
+        }
+
         switch (type) {
             case GAO_DE:
                 new LocationGaode(context)
