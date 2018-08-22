@@ -25,7 +25,7 @@ allprojects {
 Add the dependency
 ```gradle
 dependencies {
-        compile 'com.github.otjiushig:OTLocation:1.0.beta3'
+        compile 'com.github.otjiushig:OTLocation:1.0.beta5'
 }
 ```
 
@@ -33,7 +33,6 @@ dependencies {
 
 注意：
 - 目前仅集成了高德地图。
-- 使用前请自行申请定位权限。
 
 添加依赖后，请前往高德地图开放平台自行申请定位key，并按照高德官方教程添加key。
 
