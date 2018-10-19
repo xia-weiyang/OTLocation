@@ -3,16 +3,15 @@ package com.jiushig.location.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -21,7 +20,6 @@ import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.CameraPosition;
-import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
@@ -41,7 +39,6 @@ import com.jiushig.location.utils.Log;
 import com.jiushig.location.utils.Permission;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by zk on 2018/3/4.
@@ -79,7 +76,24 @@ public class SelectActivity extends BaseActivity implements AMap.OnMyLocationCha
 
         mapView = findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
-        Permission.location(this,isSuccess -> {
+        Permission.location(this, isSuccess -> {
+            // 检测是否开启了定位
+            LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (manager != null) {
+                boolean gps = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                boolean network = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                if (!gps && !network) {
+                    new AlertDialog.Builder(this)
+                            .setMessage("测到未开启定位服务，是否立即开启？")
+                            .setPositiveButton("开启", (d, i) -> {
+                                Intent intent = new Intent();
+                                intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivityForResult(intent, 8732);
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
+                }
+            }
             initMap();
         });
 
