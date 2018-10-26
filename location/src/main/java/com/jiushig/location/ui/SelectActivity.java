@@ -76,27 +76,6 @@ public class SelectActivity extends BaseActivity implements AMap.OnMyLocationCha
 
         mapView = findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
-        Permission.location(this, isSuccess -> {
-            // 检测是否开启了定位
-            LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            if (manager != null) {
-                boolean gps = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                boolean network = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-                if (!gps && !network) {
-                    new AlertDialog.Builder(this)
-                            .setMessage("测到未开启定位服务，是否立即开启？")
-                            .setPositiveButton("开启", (d, i) -> {
-                                Intent intent = new Intent();
-                                intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivityForResult(intent, 8732);
-                            })
-                            .setNegativeButton("取消", null)
-                            .show();
-                }
-            }
-            initMap();
-        });
-
 
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
@@ -118,10 +97,10 @@ public class SelectActivity extends BaseActivity implements AMap.OnMyLocationCha
      * 初始化AMap对象
      */
     private void initMap() {
-        if (aMap == null) {
-            aMap = mapView.getMap();
-            setUpMap();
-        }
+//        if (aMap == null) {
+        aMap = mapView.getMap();
+        setUpMap();
+//        }
     }
 
 
@@ -200,6 +179,27 @@ public class SelectActivity extends BaseActivity implements AMap.OnMyLocationCha
         super.onResume();
         //在activity执行onResume时执行mMapView.onResume ()，重新绘制加载地图
         mapView.onResume();
+
+        Permission.location(this, isSuccess -> {
+            // 检测是否开启了定位
+            LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (manager != null) {
+                boolean gps = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                boolean network = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                if (!gps && !network) {
+                    new AlertDialog.Builder(this)
+                            .setMessage("测到未开启定位服务，是否立即开启？")
+                            .setPositiveButton("开启", (d, i) -> {
+                                Intent intent = new Intent();
+                                intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivityForResult(intent, 8732);
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
+                }
+            }
+            initMap();
+        });
     }
 
     @Override
