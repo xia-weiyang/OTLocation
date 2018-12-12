@@ -19,9 +19,11 @@
         android:supportsRtl="true">
 
         <activity android:name=".ui.MapActivity"
+            android:theme="@style/AppThemeLocation"
             android:label="@string/activity_map"/>
 
         <activity android:name=".ui.SelectActivity"
+            android:theme="@style/AppThemeLocation"
             android:label="@string/activity_select"/>
 
     </application>
