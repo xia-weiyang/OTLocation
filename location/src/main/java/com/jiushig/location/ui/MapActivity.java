@@ -2,6 +2,7 @@ package com.jiushig.location.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -52,8 +53,12 @@ public class MapActivity extends BaseActivity {
         aMap = mapView.getMap();
         getAddress();
 
-        if(getSupportActionBar() != null)
+        if (getSupportActionBar() != null) {
+            int color = getIntent().getIntExtra("barColor", getResources().getColor(R.color.colorPrimary));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));
+            setStatusBarColor(color);
+        }
     }
 
     private void initView() {
@@ -68,11 +73,16 @@ public class MapActivity extends BaseActivity {
      * @param lat     纬度
      * @param lon     经度
      */
-    public static void start(Context context, double lat, double lon) {
+    public static void start(Context context, double lat, double lon, int barColor) {
         Intent intent = new Intent(context, MapActivity.class);
         intent.putExtra("lat", lat);
         intent.putExtra("lon", lon);
+        intent.putExtra("barColor", barColor);
         context.startActivity(intent);
+    }
+
+    public static void start(Context context, double lat, double lon) {
+        start(context, lat, lon, context.getResources().getColor(R.color.colorPrimary));
     }
 
     @Override

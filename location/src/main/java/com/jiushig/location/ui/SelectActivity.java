@@ -3,6 +3,7 @@ package com.jiushig.location.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -69,8 +70,12 @@ public class SelectActivity extends BaseActivity implements AMap.OnMyLocationCha
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select);
 
-        if (getSupportActionBar() != null)
+        if (getSupportActionBar() != null) {
+            int color = getIntent().getIntExtra("barColor", getResources().getColor(R.color.colorPrimary));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));
+            setStatusBarColor(color);
+        }
 
         unSelect = getIntent().getStringExtra("unSelect");
 
@@ -83,14 +88,19 @@ public class SelectActivity extends BaseActivity implements AMap.OnMyLocationCha
         recyclerView.setAdapter(new SelectAdapter(this, locations));
     }
 
-    public static void start(Activity activity, String unSelect) {
+    public static void start(Activity activity, String unSelect, int barColor) {
         Intent intent = new Intent(activity, SelectActivity.class);
         intent.putExtra("unSelect", unSelect);
+        intent.putExtra("barColor", barColor);
         activity.startActivityForResult(intent, REQUEST_CODE);
     }
 
+    public static void start(Activity activity, String unSelect) {
+        start(activity, unSelect, activity.getResources().getColor(R.color.colorPrimary));
+    }
+
     public static void start(Activity activity) {
-        start(activity, "");
+        start(activity, "", activity.getResources().getColor(R.color.colorPrimary));
     }
 
     /**

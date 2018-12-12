@@ -1,7 +1,12 @@
 package com.jiushig.location.ui;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+import android.view.WindowManager;
 
 /**
  * Created by Guowang on 2016/12/17.
@@ -29,5 +34,16 @@ public class BaseActivity extends AppCompatActivity {
 
     public void setPermissionCallbackListener(PermissionCallback permissionCallback) {
         this.permissionCallback = permissionCallback;
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    protected void setStatusBarColor(@ColorInt int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Window window = getWindow();
+            if (window != null) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(color);
+            }
+        }
     }
 }
