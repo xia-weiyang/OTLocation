@@ -2,7 +2,7 @@ package com.jiushig.location.ui.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,6 @@ import com.jiushig.location.entity.Location;
 import com.jiushig.location.ui.SelectActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by zk on 2018/3/4.
