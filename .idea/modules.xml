@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/OTLocation.iml" filepath="$PROJECT_DIR$/OTLocation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/location/OTLocation-location.iml" filepath="$PROJECT_DIR$/.idea/modules/location/OTLocation-location.iml" group="OTLocation/location" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/example/example.iml" filepath="$PROJECT_DIR$/.idea/modules/example/example.iml" group="OTLocation/example" />
       <module fileurl="file://$PROJECT_DIR$/location/location.iml" filepath="$PROJECT_DIR$/location/location.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/project-OTLocation.iml" filepath="$PROJECT_DIR$/.idea/modules/project-OTLocation.iml" group="OTLocation" />
+      <module fileurl="file://$PROJECT_DIR$/example/sample.iml" filepath="$PROJECT_DIR$/example/sample.iml" />
     </modules>
   </component>
 </project>

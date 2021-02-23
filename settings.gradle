@@ -1,1 +1,1 @@
-include ':sample', ':location'
+include ':example', ':location'
